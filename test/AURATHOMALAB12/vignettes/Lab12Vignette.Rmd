@@ -1,0 +1,75 @@
+---
+title: "Lab12Vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Lab12Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(AURATHOMALAB12)
+```
+
+# Task 2 {-}
+
+
+```{r}
+# Define the sample vector 
+y <- c(4.4562, 5.4889, 4.4074, 5.0774, 4.9697, 4.6756, 4.8956, 5.9755, 4.6879, 5.1052)
+
+# Call the package function 
+l <- mylambda(iter = 10000, y = y, alpha = 0.05)
+
+# Print the names of the list output
+names(l)
+
+# Display specific cutoff values
+cat("loglamcut:\n")
+print(l$loglamcut)
+
+cat("\nybarcut:\n")
+print(l$ybarcut)
+
+cat("\nybarcutest:\n")
+print(l$ybarcutest)
+```
+
+# Task 4 {-}
+
+
+```{r}
+# call mypower function 
+mypower(n = 10, delta = 2, sigma = 2, alpha = 0.05)
+```
+
+```{r}
+# run different t tests 
+power.t.test(n = 20, delta = 1)
+power.t.test(power = .90, delta = 1)
+power.t.test(power = .90, delta = 1, alternative = "one.sided")
+```
+# Python {-}
+
+```{r}
+# load reticulate
+library(reticulate)
+
+# source python script
+source_python("power_calc.py")
+
+# Call python function
+result <- python_power_ttest(n = 26, delta = 1, sigma = 1.0, alpha = 0.05)
+
+# Print result
+print(result)
+```
+
+
