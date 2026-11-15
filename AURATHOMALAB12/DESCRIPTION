@@ -1,0 +1,28 @@
+Package: AURATHOMALAB12
+Title: Lab 12 Statistical Tools, Python Power Calculations, and Shiny Apps
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Aura", "Thoma",
+      email = "aurathoma@gmail.com",
+      role = c("aut", "cre")
+    )
+  )
+Description: Provides custom statistical functions for likelihood ratio and lambda analysis, 
+    Monte Carlo power simulation tools, Python-interoperable t-test power calculations 
+    utilizing 'reticulate', and interactive Shiny applications for classroom and research workflows.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Imports: 
+    shiny
+URL: https://github.com/aurathoma/AURATHOMALAB12
+BugReports: https://github.com/aurathoma/AURATHOMALAB12/issues
+Suggests: 
+    knitr,
+    rmarkdown,
+    reticulate
+VignetteBuilder: knitr
+Depends: 
+    R (>= 3.5)

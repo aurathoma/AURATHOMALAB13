@@ -1,0 +1,10 @@
+name: aurathoma_app3
+title:
+username: aura-overbooking
+account: aura-overbooking
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 18449979
+bundleId:
+url: https://aura-overbooking.shinyapps.io/aurathoma_app3/
+version: 1
