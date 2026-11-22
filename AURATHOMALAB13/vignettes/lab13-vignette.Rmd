@@ -111,3 +111,25 @@ summary(model2)$adj.r.squared
 ```
 
 
+Commit
+
+![commit13](commit13.png)
+
+
+Check
+   ERROR: Unknown command "TMPDIR=C:/Users/aurat/AppData/Local/Temp/RtmpkTXOVb/file75c463862583". Did you mean command "update"?
+   Warning message:
+   In system2("quarto", "-V", stdout = TRUE, env = paste0("TMPDIR=",  :
+     running command '"quarto" TMPDIR=C:/Users/aurat/AppData/Local/Temp/RtmpkTXOVb/file75c463862583 -V' had status 1
+── R CMD check results ─────────────────────────────────────────────────────── AURATHOMALAB13 0.1.0 ────
+Duration: 25.1s
+
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+
+
+Shiny
+
+ https://aura-overbooking.shinyapps.io/AURATHOMALAB13-spruce/
+ 
+ 
+
