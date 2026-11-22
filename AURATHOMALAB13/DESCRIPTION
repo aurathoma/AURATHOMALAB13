@@ -1,0 +1,28 @@
+Package: AURATHOMALAB13
+Type: Package
+Title: Regression Plot and Creating a Linear Model
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Aura", "Thoma",
+      email = "aurathoma@gmail.com",
+      role = c("aut", "cre")
+    )
+  )
+Description: Create a linear regression model output.
+    Create residual plots. 
+      Calculate regression equation. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Imports: 
+    shiny
+URL: https://github.com/aurathoma/AURATHOMALAB13
+BugReports: https://github.com/aurathoma/AURATHOMALAB13/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Depends: 
+    R (>= 3.5)
