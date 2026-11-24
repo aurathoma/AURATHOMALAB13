@@ -1,0 +1,181 @@
+---
+title: "AURATHOMAPROJECT2"
+author: "Aura Thoma"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+---
+```{r}
+library(AURATHOMAPROJECT2)
+```
+
+
+```{r}
+dowsing<-read.csv("DOWSING.csv")
+```
+
+# Task 1 {-}
+
+```{r}
+#tail of dataset
+tail(dowsing,4)
+```
+
+# Task 2 {-}
+
+```{r}
+library(ggplot2)
+
+# Fit the linear model
+ylm <- lm(PIPE ~ GUESS, data = dowsing)
+summary(ylm)
+
+# Create the ggplot
+ggplot(dowsing, aes(x = GUESS, y = PIPE)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "lm")
+```
+
+
+$$\widehat{\text{PIPE}} = `r round(coef(ylm)[1], 4)` + `r round(coef(ylm)[2], 4)` \cdot \text{GUESS}$$
+
+
+# Task 3 {-}
+
+
+```{r}
+# create data frame 
+res_df <- data.frame(
+  yhat_i = fitted(ylm),
+  r_i = residuals(ylm)
+)
+
+# create plot 
+ggplot(res_df, aes(x = yhat_i, y = r_i)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "loess") +
+  labs(
+    title = "Diagnostic plot",
+    x = "yhat_i",
+    y = "r_i"
+  )
+```
+
+```{r}
+library(s20x)
+# call function 
+normcheck(ylm, shapiro.wilk = TRUE)
+```
+
+
+Normality (from normcheck): The points on the Q-Q plot closely follow the straight diagonal reference line, and the histogram of residuals appears roughly bell-shaped and symmetric. Additionally, the Shapiro-Wilk test yields a high p-value (W = 0.9869, p = 0.978), meaning we do not reject the null hypothesis of normality—the normality assumption for the errors is well satisfied.   
+
+Linearity & Constant Variance (from the Diagnostic Plot): The residuals are scattered fairly randomly around the horizontal 0 line without a strong funnel shape (supporting constant variance/homoscedasticity), though the loess curve shows a slight wave/dip around y hat approx 55, suggesting minor non-linearity or influence from a few spread-out observations.
+
+# Task 4 {-}
+
+
+```{r}
+# call function 
+myciplot(x = ylm, alpha = 0.05, f = 0.5)
+```
+
+# Task 5 {-}
+
+H0: beta 1 = 0 versus Ha: beta 1 does not equal 0 to evaluate whether there is evidence that dowsers divine water (if dowsers have no genuine ability beyond random guessing, there is no linear relationship between GUESS and PIPE, so beta 1 = 0).
+
+The 95% confidence interval for GUESS beta 1 is [-0.0843, 0.7000] (exact: -0.08427417 to 0.6999993). Because 0 falls inside this interval, we fail to reject H0.
+
+p-value and alpha = 0.05: The GUESS p-value (Pr(>|t|)) is 0.1182. Because 0.1182 > 0.05, we fail to reject H0.
+
+Rejection Region RR and T stat: With 24 degrees of freedom at alpha = 0.05, the critical value is t crit approx 2.0639 (2.063899), giving a two-tailed rejection region of T > 2.0639 or T < -2.0639. Your calculated test statistic is T calc = 1.620 (t value for GUESS). Because 1.620 < 2.0639, T calc is not in the rejection region, so we fail to reject H0. 
+
+
+
+All three methods fail to reject H0, so there is insufficient statistical evidence at alpha = 0.05 to conclude that dowsers divine water. 
+
+```{r}
+summary(ylm)
+confint(ylm, level = 0.95)
+
+t_crit <- qt(1 - 0.05 / 2, df = ylm$df.residual)
+t_crit
+```
+
+```{r}
+# Load data
+spruce <- read.csv("SPRUCE.csv")
+head(spruce)
+
+# function to calculate piecewise regression
+myf2 <- function(x, xk1, xk2, coef) {
+  coef[1] + coef[2]*(x) + 
+    coef[3]*(x - xk1)*(x > xk1) + 
+    coef[4]*(x - xk2)*(x > xk2)
+}
+
+# Function to extract coefficients using indicator variables for knots
+coeff <- function(xk1, xk2) {
+  df <- within(spruce, {
+    x1 <- (BHDiameter - xk1) * (BHDiameter > xk1)
+    x2 <- (BHDiameter - xk2) * (BHDiameter > xk2)
+  })
+  lsp <- lm(Height ~ BHDiameter + x1 + x2, data = df)
+  coef(lsp)
+}
+
+#  Base R Plot of Spruce Data
+with(spruce, plot(BHDiameter, Height,
+                     pch = 21,
+                     cex = 1.5,
+                     bg = "green",
+                     main = "Height Vs BHDiameter using piecewise regression"
+))
+
+# Add the fitted piecewise regression curve with knots at 10 and 18
+cf <- coeff(10, 18)
+curve(myf2(x, 10, 18, cf), add = TRUE, lwd = 2, col = "blue")
+```
+
+
+# Task 6 {-}
+
+```{r}
+# call function
+myknot(x_k = 17, x = spruce$BHDiameter, y = spruce$Height)
+```
+```{r}
+# assign values to variables 
+diam <- spruce$BHDiameter
+height <- spruce$Height
+nvalues <- 1000
+x <- seq(min(diam), max(diam), length = nvalues)
+y <- vector(mode = "numeric", length = nvalues)
+
+# create for loop
+for (i in 1:nvalues) {
+  y[i] <- myknot(x[i], x = diam, y = height)
+}
+
+# assign to variable 
+nmax <- which.max(y)
+plot(x, y, type = "l", lwd = 1.2, col = "Red",
+     xlab = "x_k (Knot Position)", ylab = "R-squared",
+     main = "R-squared vs. Knot Position")
+abline(v = x[nmax], lwd = 3)
+```
+```{r}
+# Grid search maximum
+x_k <- x[nmax]
+myknot(x_k = x_k, x = diam, y = height)
+x_k
+
+# Exact numerical optimization over [15, 20]
+optimize(myknot, interval = c(15, 20), x = diam, y = height, maximum = TRUE)
+```
+
+
+

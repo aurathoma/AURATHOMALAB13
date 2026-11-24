@@ -1,0 +1,170 @@
+---
+title: "Project 2: Dowsing & Piecewise Regression"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Project 2: Dowsing & Piecewise Regression}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(AURATHOMAPROJECT2)
+```
+
+
+# Task 2 {-}
+
+
+```{r}
+library(ggplot2)
+dowsing<-read.csv("DOWSING.csv")
+
+# Fit the linear model
+ylm <- lm(PIPE ~ GUESS, data = dowsing)
+summary(ylm)
+
+# Create the ggplot
+ggplot(dowsing, aes(x = GUESS, y = PIPE)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "lm")
+
+```
+
+
+# Task 3 {-}
+
+
+```{r}
+# create dataframe 
+res_df <- data.frame(
+  yhat_i = fitted(ylm),
+  r_i = residuals(ylm)
+)
+
+# create scatterplot 
+ggplot(res_df, aes(x = yhat_i, y = r_i)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "loess") +
+  labs(
+    title = "Diagnostic plot",
+    x = "yhat_i",
+    y = "r_i"
+  )
+```
+
+```{r}
+library(s20x)
+# call function 
+normcheck(ylm, shapiro.wilk = TRUE)
+```
+
+# Task 4 {-}
+
+
+```{r}
+# call function 
+myciplot(x = ylm, alpha = 0.05, f = 0.5)
+```
+
+# Task 5 {-}
+
+```{r}
+summary(ylm)
+confint(ylm, level = 0.95)
+
+t_crit <- qt(1 - 0.05 / 2, df = ylm$df.residual)
+t_crit
+```
+
+```{r}
+# read data into R
+spruce <- read.csv("SPRUCE.csv")
+# head of dataset
+head(spruce)
+
+# function to calculate regression 
+myf2 <- function(x, xk1, xk2, coef) {
+  coef[1] + coef[2]*(x) + 
+    coef[3]*(x - xk1)*(x > xk1) + 
+    coef[4]*(x - xk2)*(x > xk2)
+}
+
+# function for linear
+coeff <- function(xk1, xk2) {
+  df <- within(spruce, {
+    x1 <- (BHDiameter - xk1) * (BHDiameter > xk1)
+    x2 <- (BHDiameter - xk2) * (BHDiameter > xk2)
+  })
+  lsp <- lm(Height ~ BHDiameter + x1 + x2, data = df)
+  coef(lsp)
+}
+
+# base R plot 
+with(spruce, plot(BHDiameter, Height,
+                     pch = 21,
+                     cex = 1.5,
+                     bg = "green",
+                     main = "Height Vs BHDiameter using piecewise regression"
+))
+
+# fitted piecewise regression 
+cf <- coeff(10, 18)
+curve(myf2(x, 10, 18, cf), add = TRUE, lwd = 2, col = "blue")
+```
+
+
+# Task 6 {-}
+
+```{r}
+# call function 
+myknot(x_k = 17, x = spruce$BHDiameter, y = spruce$Height)
+```
+```{r}
+# declare variables 
+diam <- spruce$BHDiameter
+height <- spruce$Height
+nvalues <- 1000
+x <- seq(min(diam), max(diam), length = nvalues)
+y <- vector(mode = "numeric", length = nvalues)
+
+# create for loop
+for (i in 1:nvalues) {
+  y[i] <- myknot(x[i], x = diam, y = height)
+}
+
+# create plot 
+nmax <- which.max(y)
+plot(x, y, type = "l", lwd = 1.2, col = "Red",
+     xlab = "x_k (Knot Position)", ylab = "R-squared",
+     main = "R-squared vs. Knot Position")
+abline(v = x[nmax], lwd = 3)
+```
+```{r}
+# Grid search maximum
+x_k <- x[nmax]
+myknot(x_k = x_k, x = diam, y = height)
+x_k
+
+# Exact numerical optimization 
+optimize(myknot, interval = c(15, 20), x = diam, y = height, maximum = TRUE)
+```
+
+Link for Shiny app
+
+commit
+
+![]()
+
+check
+
+
+
+
+
