@@ -7,13 +7,13 @@
 myciplot(x, alpha = 0.05, ...)
 }
 \arguments{
-\item{x}{An object of class `lm` (simple linear regression model).}
+\item{x}{An object of class \code{lm} (simple linear regression model).}
 
-\item{alpha}{Significance level for the confidence intervals (default is `0.05`
-for 95% CIs).}
+\item{alpha}{Significance level for the confidence intervals (default is \code{0.05}
+for 95\% CIs).}
 
-\item{...}{Additional arguments passed to `stats::lowess()` (such as the
-smoothing parameter `f`).}
+\item{...}{Additional arguments passed to \code{stats::lowess()} (such as the
+smoothing parameter \code{f}).}
 }
 \value{
 A named list containing:
@@ -28,7 +28,7 @@ A named list containing:
 }
 }
 \description{
-Takes a fitted `lm` object, calculates confidence intervals for the regression
+Takes a fitted \code{lm} object, calculates confidence intervals for the regression
 parameters (\eqn{\beta_0}, \eqn{\beta_1}, and \eqn{\sigma^2}), and generates a
 two-panel diagnostic plot consisting of a residual histogram with a normal
 curve and a residuals-versus-fitted plot with a lowess smoother.

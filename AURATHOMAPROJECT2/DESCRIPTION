@@ -11,21 +11,19 @@ Authors@R: c(
   )
 Description: Provides functions and an interactive application for simple
     linear regression modeling, residual diagnostics, parameter confidence
-    intervals, and single-knot piecewise regression analysis[cite: 1, 2, 7, 8].
+    intervals, and single-knot piecewise regression analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
 Depends:
     R (>= 3.5)
-Imports:
-    dplyr,
+Suggests:
     ggplot2,
+    knitr,
+    rmarkdown,
     s20x,
     shiny
-Suggests:
-    knitr,
-    rmarkdown
 VignetteBuilder: knitr
 URL: https://github.com/aurathoma/AURATHOMAPROJECT2
 BugReports: https://github.com/aurathoma/AURATHOMAPROJECT2/issues
